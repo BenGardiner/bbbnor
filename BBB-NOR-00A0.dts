@@ -1,0 +1,82 @@
+
+&am33xx_pinmux {
+	bbb_nor_flash_pins: bbb_nor_flash_pins {
+		pinctrl-single,pins = <
+			0x00 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad0.gpmc_ad0 */
+			0x04 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad1.gpmc_ad1 */
+			0x08 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad2.gpmc_ad2 */
+			0x0c (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad3.gpmc_ad3 */
+			0x10 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad4.gpmc_ad4 */
+			0x14 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad5.gpmc_ad5 */
+			0x18 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad6.gpmc_ad6 */
+			0x1c (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad7.gpmc_ad7 */
+			0x20 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad8.gpmc_ad8 */
+			0x24 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad9.gpmc_ad9 */
+			0x28 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad10.gpmc_ad10 */
+			0x2c (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad11.gpmc_ad11 */
+			0x30 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad12.gpmc_ad12 */
+			0x34 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad13.gpmc_ad13 */
+			0x38 (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad14.gpmc_ad14 */
+			0x3c (MUX_MODE0 | PIN_INPUT)	/* gpmc_ad15.gpmc_ad15 */
+			0x40 (MUX_MODE0 | PIN_OUTPUT)	/* gpmc_a0.gpmc_a0 */
+			0x44 (MUX_MODE0 | PIN_OUTPUT)	/* gpmc_a1.gpmc_a1 */
+			0x48 (MUX_MODE0 | PIN_OUTPUT)	/* gpmc_a2.gpmc_a2 */
+			0x4c (MUX_MODE0 | PIN_OUTPUT)	/* gpmc_a3.gpmc_a3 */
+			0x50 (MUX_MODE0 | PIN_OUTPUT)	/* gpmc_a4.gpmc_a4 */
+			0x54 (MUX_MODE0 | PIN_OUTPUT)	/* gpmc_a5.gpmc_a5 */
+			0x58 (MUX_MODE0 | PIN_OUTPUT)	/* gpmc_a6.gpmc_a6 */
+			0x5c (MUX_MODE0 | PIN_OUTPUT)	/* gpmc_a7.gpmc_a7 */
+			0x70 (MUX_MODE0 | PIN_INPUT_PULLUP )	/* gpmc_wait0.gpmc_wait0 */
+		/*	0x74 (MUX_MODE0 | PIN_OUTPUT_PULLUP) */	/* gpmc_wpn (not connected) */
+			0x7c (MUX_MODE0 | PIN_OUTPUT_PULLUP)	/* gpmc_csn0.gpmc_csn0  */
+			0x90 (MUX_MODE0 | PIN_OUTPUT)		/* gpmc_advn_ale.gpmc_advn_ale */
+			0x94 (MUX_MODE0 | PIN_OUTPUT)		/* gpmc_oen_ren.gpmc_oen_ren */
+			0x98 (MUX_MODE0 | PIN_OUTPUT)		/* gpmc_wen.gpmc_wen */
+			0x9c (MUX_MODE0 | PIN_OUTPUT)		/* gpmc_be0n_cle.gpmc_be0n_cle */
+		>;
+	};
+};
+
+&gpmc {
+	ranges = <0 0 0x08000000 0x01000000>;	/* address offset=128MB, range=128Mb=16MB */
+	pinctrl-names = "default";
+	pinctrl-0 = <&bbb_nor_flash_pins>;
+	nor@0,0 {
+		status = "disabled";
+		compatible = "cfi-flash";
+		reg = <0 0 0x01000000>;		/* device memory map = actual device size = 16MB */
+		/* generic bindings */
+		linux,mtd-name = "Micron,M29W128G";
+		bank-width = <2>;
+		/* vendor specific bindings */
+		gpmc,device-width = <2>;
+		gpmc,mux-add-data = <2>;
+		gpmc,sync-clk-ps = <0>;
+		gpmc,cs-on-ns = <0>;
+		gpmc,cs-rd-off-ns = <120>;
+		gpmc,cs-wr-off-ns = <120>;
+		gpmc,adv-on-ns = <10>;
+		gpmc,adv-rd-off-ns = <40>;
+		gpmc,adv-wr-off-ns = <40>;
+		gpmc,we-on-ns = <50>;
+		gpmc,we-off-ns = <120>;
+		gpmc,oe-on-ns = <50>;
+		gpmc,oe-off-ns = <120>;
+		gpmc,access-ns = <100>;
+		gpmc,rd-cycle-ns = <120>;
+		gpmc,wr-cycle-ns = <120>;
+		gpmc,page-burst-access-ns = <0>;
+		gpmc,cycle2cycle-samecsen;
+		gpmc,num-waitpins = <4>;
+		gpmc,bus-turnaround-ns = <0>;
+		gpmc,cycle2cycle-delay-ns = <20>;
+		gpmc,wait-monitoring-ns = <0>;
+		gpmc,wr-access-ns = <80>;
+		gpmc,wr-data-mux-bus-ns = <100>;
+		/* MTD partition table */
+		/* All SPL-* partitions are sized to minimal length
+		 * which can be independently programmable */
+		#address-cells = <1>;
+		#size-cells = <1>;
+	};
+};

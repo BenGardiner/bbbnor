@@ -1,0 +1,8 @@
+#!/bin/bash
+
+die() {
+	echo "$@" > /dev/stderr
+	exit 1
+}
+
+dtc -O dtb -o BBB-GPIO-KEYS-00A0.dtbo -b 0 -@ BBB-GPIO-KEYS-00A0.dts || die
